@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+  <div class="container">
+    <h2>Registro de Préstamos</h2>
+    <form>
+      <!-- Cliente (persona_id) -->
+      <label for="cliente">Nombre del cliente</label>
+      <select #nombreCliente>
+        <option value="0">Asigne el cliente</option>
+        <!-- Ciclo para llenar los clientes, adaptarlo a tu lógica -->
+        @for (item of lisClientes; track $index) {
+          <option value="{{item.id}}">{{item.nombreCliente}}</option>
+        }
+      </select>
+  
+      <!-- Monto total del préstamo -->
+      <label for="monto_total">Monto total</label>
+      <input type="number" id="monto_total" name="monto_total" placeholder="Monto total del préstamo" step="0.01" required>
+  
+      <!-- Tasa de interés (%) -->
+      <label for="interes">Tasa de interés (%)</label>
+      <input type="number" id="interes" name="interes" placeholder="Porcentaje de interés" step="0.01" required>
+  
+      <!-- Monto del interés calculado -->
+      <label for="monto_interes">Monto del interés</label>
+      <input type="number" id="monto_interes" name="monto_interes" placeholder="Monto calculado del interés" step="0.01" readonly>
+  
+      <!-- Monto total con interés -->
+      <label for="monto_total_con_interes">Monto total con interés</label>
+      <input type="number" id="monto_total_con_interes" name="monto_total_con_interes" placeholder="Total + Interés" step="0.01" readonly>
+  
+      <!-- Número de cuotas -->
+      <label for="numero_cuotas">Número de cuotas</label>
+      <input type="number" id="numero_cuotas" name="numero_cuotas" placeholder="Número de pagos acordados" required>
+  
+      <!-- Fecha de inicio del préstamo -->
+      <label for="fecha_inicio">Fecha de inicio</label>
+      <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+  
+      <!-- Fecha de finalización del préstamo -->
+      <label for="fecha_finalizacion">Fecha de finalización</label>
+      <input type="date" id="fecha_finalizacion" name="fecha_finalizacion" required>
+  
+      <!-- Estado del préstamo -->
+      <label for="estado">Estado del préstamo</label>
+      <select id="estado" name="estado">
+        <option value="Activo">Activo</option>
+        <option value="Cancelado">Cancelado</option>
+        <option value="Vencido">Vencido</option>
+      </select>
+  
+      <!-- Botón para registrar el préstamo -->
+      <input type="submit" value="Registrar Préstamo">
+    </form>
+  </div>
+  
+
+      <div class="container">
+        <h2>Lista de Préstamos</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>Nombre del cliente</th>
+              <th>Monto</th>
+              <th>Interés (%)</th>
+              <th>Monto interés</th>
+              <th>Monto total</th>
+              <th>Cuotas (Meses)</th>
+              <th>Fecha inicio</th>
+              <th>Fecha fin</th>
+              <th>Estado</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of listPrestamos; track $index) {
+              <tr>  
+                  <td>{{item.nombreCliente}}</td>
+                  <td>{{item.montoTotal}}</td>
+                  <td>{{item.interes}}</td>
+                  <td>{{item.montoInteres}}</td>
+                  <td>{{item.montoTotalConInteres}}</td>
+                  <td>{{item.cuotas}}</td>
+                  <td>{{item.fechaInicio}}</td>
+                  <td>{{item.fechaFin}}</td>
+                  <td>{{item.estado}}</td>
+                  <td>
+                    <button   class="editar" >Editar</button>
+                    <button (click)="eliminarCliente(item.id)" class="eliminar" >Eliminar</button>
+                  </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      
+
+
+      <script>
+        // Capturamos los elementos del DOM
+        const montoInput = document.getElementById('monto');
+        const interesInput = document.getElementById('interes');
+        const montoInteresInput = document.getElementById('monto_interes');
+        const montoTotalInput = document.getElementById('monto_total');
+    
+        // Función para calcular el monto del interés y el monto total con interés
+        function calcularPrestamo() {
+            const monto = parseFloat(montoInput.value) || 0;
+            const interes = parseFloat(interesInput.value) || 0;
+    
+            // Cálculo del monto de interés
+            const montoInteres = (monto * interes) / 100;
+            montoInteresInput.value = montoInteres.toFixed(2);
+    
+            // Cálculo del monto total con interés
+            const montoTotalConInteres = monto + montoInteres;
+            montoTotalInput.value = montoTotalConInteres.toFixed(2);
+        }
+    
+        // Escuchamos los cambios en los inputs
+        montoInput.addEventListener('input', calcularPrestamo);
+        interesInput.addEventListener('input', calcularPrestamo);
+    </script>
+
+    
+</body>
+</html>

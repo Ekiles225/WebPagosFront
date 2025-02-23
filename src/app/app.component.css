@@ -1,0 +1,94 @@
+/* Estilos generales del navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3498db;
+    padding: 1rem 2rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    position: relative;
+    z-index: 1000;
+}
+
+.navbar-logo {
+    color: #ecf0f1;
+    font-size: 1.8rem;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.navbar-links {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.navbar-links a {
+    color: #ecf0f1;
+    text-decoration: none;
+    padding: 0.75rem 1.25rem;
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.navbar-links a:hover {
+    background-color: #197cdf;
+    border-radius: 4px;
+    color: #ecf0f1;
+}
+
+/* Icono del menú para dispositivos móviles */
+.menu-icon {
+    display: none;
+    cursor: pointer;
+    font-size: 2rem;
+    color: #ecf0f1;
+    position: relative; /* Posicionamiento para el menú desplegable */
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+        position: absolute;
+        top: 60px; /* Aparece justo debajo del icono de hamburguesa */
+        right: 20px; /* Alineado a la derecha */
+        background-color: #197cdfc4; /* Fondo oscuro */
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para destacar el menú */
+        flex-direction: column;
+        gap: 0.5rem;
+        min-width: 200px; /* Ancho mínimo del menú */
+        transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        opacity: 0; /* Escondido por defecto */
+        transform: translateY(-20px); /* Oculto inicialmente con una ligera translación */
+    }
+
+    .menu-icon {
+        display: block;
+    }
+
+    .navbar.active .navbar-links {
+        display: flex;
+        opacity: 1; /* Mostrar menú al activarse */
+        transform: translateY(0); /* Volverlo a su posición */
+    }
+
+    .navbar-links a {
+        padding: 0.5rem 1rem;
+        font-size: 1rem;
+        text-align: left; /* Alineación a la izquierda para más claridad */
+    }
+}
+
+/* Mejora del enfoque y accesibilidad */
+.navbar-links a:focus {
+    outline: 2px solid #2980b9;
+    outline-offset: 4px;
+}
+

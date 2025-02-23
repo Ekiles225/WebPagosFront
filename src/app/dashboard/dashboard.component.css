@@ -1,0 +1,155 @@
+
+
+/* Contenedor general */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Sección Dashboard */
+.dashboard {
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.dashboard h1 {
+    font-size: 2rem;
+    color: #333;
+}
+
+.dashboard p {
+    color: #666;
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+}
+
+/* Resumen en tarjetas */
+.dashboard-summary {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.summary-item {
+    flex: 1;
+    background-color: #f4f4f4;
+    padding: 1rem;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 4px 6px #3498dbaf;
+}
+
+.summary-item:hover{
+    transform:rotate(2deg);
+}
+
+.summary-item h3 {
+    font-size: 1.2rem;
+    color: #3498db;
+    margin-bottom: 0.5rem;
+}
+
+.summary-item p {
+    font-size: 2rem;
+    color: #333;
+}
+
+/* Tabla de clientes */
+.clients-section {
+    padding: 2rem 0;
+}
+
+.clients-section h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1rem;
+}
+
+.clients-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 1.5rem;
+}
+
+.clients-table th, .clients-table td {
+    padding: 1rem;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.clients-table th {
+    background-color: #3498db;
+    color: white;
+}
+
+.clients-table td {
+    color: #333;
+}
+
+.clients-table tr:hover {
+    background-color: #58b0ebc9;
+}
+
+.btn-primary {
+    background-color: #3498db;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1rem;
+    display: inline-block;
+    margin-top: 1rem;
+}
+
+.btn-primary:hover {
+    background-color: #2980b9;
+}
+
+/* Acceso rápido */
+.quick-access {
+    padding: 2rem 0;
+    text-align: center;
+}
+
+.quick-access h2 {
+    font-size: 1.8rem;
+    color: #333;
+    margin-bottom: 1.5rem;
+}
+
+.access-links {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-secondary {
+    background-color: #ecf0f1;
+    color: #3498db;
+    padding: 0.75rem 1.5rem;
+    border-radius: 5px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.btn-secondary:hover {
+    background-color: #bdc3c7;
+}
+
+/* Estilos Responsive */
+@media (max-width: 768px) {
+    .dashboard-summary {
+        flex-direction: column;
+    }
+
+    .access-links {
+        flex-direction: column;
+    }
+}
+
+

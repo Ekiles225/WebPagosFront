@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+  <div class="container">
+    <h2>Registro de Clientes</h2>
+    <form >
+      <label for="nombre">Nombre del Cliente</label>
+      <input #nombreCliente type="text" id="nombre" name="nombreCliente" placeholder="Nombre completo del cliente">
+  
+      <label for="identificacion">Identificación</label>
+      <input #identificacion type="text" id="identificacion" name="identificacion" placeholder="Número de identificación">
+  
+      <label for="telefono">Teléfono</label>
+      <input #telefono type="text" id="telefono" name="telefono" placeholder="Ej: +34 123 456 789">
+  
+      <label for="direccion">Dirección</label>
+      <input #direccion type="text" id="direccion" name="direccion" placeholder="Dirección completa">
+      
+      <div>
+        <button type="button" (click)="storecliente(nombreCliente,identificacion,telefono,direccion)">Registrar cliente</button>
+      </div>
+      
+
+    </form>
+  </div>
+
+ 
+  
+  <div class="container">
+    <h2>Lista de Clientes</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Identificación</th>
+          <th>Teléfono</th>
+          <th>Dirección</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (item of listCliente; track $index) {
+          <tr>  
+              <td>{{item.nombreCliente}}</td>
+              <td>{{item.identificacion}}</td>
+              <td>{{item.telefono}}</td>
+              <td>{{item.direccion}}</td>
+              <td>
+                <button   class="editar" >Editar</button>
+                <button (click)="eliminarCliente(item.id)" class="eliminar" >Eliminar</button>
+              </td>
+          </tr>
+        }
+      </tbody>
+      
+    </table>
+  </div>
+  
+  
+  <!-- Modal para editar cliente -->
+<!-- <div class="modal" [class.show]="modalAbierto">
+  <div class="modal-content">
+    <h2>{{ clienteSeleccionado.id ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
+    <form>
+      <label for="modal-nombre">Nombre del Cliente</label>
+      <input #modalNombre type="text" id="modal-nombre" placeholder="Nombre completo" [(ngModel)]="clienteSeleccionado.nombreCliente">
+      
+      <label for="modal-identificacion">Identificación</label>
+      <input #modalIdentificacion type="text" id="modal-identificacion" placeholder="Número de identificación" [(ngModel)]="clienteSeleccionado.identificacion">
+      
+      <label for="modal-telefono">Teléfono</label>
+      <input #modalTelefono type="text" id="modal-telefono" placeholder="Teléfono" [(ngModel)]="clienteSeleccionado.telefono">
+      
+      <label for="modal-direccion">Dirección</label>
+      <input #modalDireccion type="text" id="modal-direccion" placeholder="Dirección completa" [(ngModel)]="clienteSeleccionado.direccion">
+      
+      <div>
+        <button type="button" (click)="guardarOActualizarCliente(modalNombre, modalIdentificacion, modalTelefono, modalDireccion)">
+          {{ clienteSeleccionado.id ? 'Actualizar cliente' : 'Registrar cliente' }}
+        </button>
+        <button type="button" (click)="cerrarModal()">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div> -->
+
+
+</body>
+</html>

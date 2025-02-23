@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+     
+    <div class="container">
+        <!-- Sección de Dashboard -->
+        <section class="dashboard">
+            <h1>Bienvenido, Admin</h1>
+            <p>Gestiona tus clientes, préstamos y pagos desde este panel de control.</p>
+    
+            <!-- Tarjetas resumen -->
+            <div class="dashboard-summary">
+                <div class="summary-item">
+                    <h3>Total Clientes</h3>
+                    <p>150</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Préstamos Activos</h3>
+                    <p>45</p>
+                </div>
+                <div class="summary-item">
+                    <h3>Pagos Pendientes</h3>
+                    <p>20</p>
+                </div>
+            </div>
+        </section>
+    
+        <!-- Tabla de Clientes -->
+        <section class="clients-section">
+            <h2>Clientes Recientes</h2>
+            <table class="clients-table">
+                <thead>
+                    <tr>
+                      <th>Nombre</th>
+                      <th>Identificación</th>
+                      <th>Teléfono</th>
+                      <th>Dirección</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @for (item of listCliente; track $index) {
+                      <tr>  
+                          <td>{{item.nombreCliente}}</td>
+                          <td>{{item.identificacion}}</td>
+                          <td>{{item.telefono}}</td>
+                          <td>{{item.direccion}}</td>
+                      </tr>
+                    }
+                  </tbody>
+            </table>
+            <a class="btn-primary">Ver todos los clientes</a>
+        </section>
+    
+        <!-- Acceso rápido a otras gestiones -->
+        <section class="quick-access">
+            <h2>Accesos Rápidos</h2>
+            <div class="access-links">
+                <a routerLink="/prestamos" class="btn-secondary">Gestionar Préstamos</a>
+                <a routerLink="/pagos" class="btn-secondary">Ver Pagos</a>
+                <a routerLink="/historialPagos" class="btn-secondary">Historial de Pagos</a>
+            </div>
+        </section>
+    </div>
+      
+</body>
+</html>
