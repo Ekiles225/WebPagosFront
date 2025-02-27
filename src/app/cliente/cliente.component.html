@@ -6,10 +6,14 @@
     <title>Document</title>
 </head>
 <body>
-    
+ 
   <div class="container">
     <h2>Registro de Clientes</h2>
     <form >
+
+      <!-- Hidden input for usuario_id -->
+      <input type="hidden" #usuarioId value="1">
+
       <label for="nombre">Nombre del Cliente</label>
       <input #nombreCliente type="text" id="nombre" name="nombreCliente" placeholder="Nombre completo del cliente">
   
@@ -22,13 +26,16 @@
       <label for="direccion">Dirección</label>
       <input #direccion type="text" id="direccion" name="direccion" placeholder="Dirección completa">
       
+      <label for="activo">Activo</label>
+      <input #activo type="number" id="direccion" name="direccion" placeholder="Dirección completa">
+
       <div>
-        <button type="button" (click)="storecliente(nombreCliente,identificacion,telefono,direccion)">Registrar cliente</button>
+        <button type="button" (click)="storecliente(nombreCliente,identificacion,telefono,direccion, activo, usuarioId.value)">Registrar cliente</button>
       </div>
       
 
     </form>
-  </div>
+  </div> 
 
  
   
@@ -41,18 +48,20 @@
           <th>Identificación</th>
           <th>Teléfono</th>
           <th>Dirección</th>
+          <th>activo</th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
         @for (item of listCliente; track $index) {
           <tr>  
-              <td>{{item.nombreCliente}}</td>
-              <td>{{item.identificacion}}</td>
+              <td>{{item.nombre}}</td>
+              <td>{{item.dni}}</td>
               <td>{{item.telefono}}</td>
               <td>{{item.direccion}}</td>
+              <td>{{item.activo}}</td>
               <td>
-                <button   class="editar" >Editar</button>
+                <button (click)="abrirModal(item)" class="editar" >Editar</button>
                 <button (click)="eliminarCliente(item.id)" class="eliminar" >Eliminar</button>
               </td>
           </tr>
@@ -63,33 +72,32 @@
   </div>
   
   
-  <!-- Modal para editar cliente -->
-<!-- <div class="modal" [class.show]="modalAbierto">
+<!-- Modal para editar cliente -->
+<div class="modal" [class.show]="modalAbierto">
   <div class="modal-content">
-    <h2>{{ clienteSeleccionado.id ? 'Editar Cliente' : 'Nuevo Cliente' }}</h2>
     <form>
       <label for="modal-nombre">Nombre del Cliente</label>
-      <input #modalNombre type="text" id="modal-nombre" placeholder="Nombre completo" [(ngModel)]="clienteSeleccionado.nombreCliente">
+      <input type="text" id="modal-nombre" placeholder="Nombre completo" [(ngModel)]="clienteSeleccionado.nombre" name="nombre">
       
       <label for="modal-identificacion">Identificación</label>
-      <input #modalIdentificacion type="text" id="modal-identificacion" placeholder="Número de identificación" [(ngModel)]="clienteSeleccionado.identificacion">
+      <input type="text" id="modal-identificacion" placeholder="Número de identificación" [(ngModel)]="clienteSeleccionado.dni" name="dni">
       
       <label for="modal-telefono">Teléfono</label>
-      <input #modalTelefono type="text" id="modal-telefono" placeholder="Teléfono" [(ngModel)]="clienteSeleccionado.telefono">
+      <input type="text" id="modal-telefono" placeholder="Teléfono" [(ngModel)]="clienteSeleccionado.telefono" name="telefono">
       
       <label for="modal-direccion">Dirección</label>
-      <input #modalDireccion type="text" id="modal-direccion" placeholder="Dirección completa" [(ngModel)]="clienteSeleccionado.direccion">
+      <input type="text" id="modal-direccion" placeholder="Dirección completa" [(ngModel)]="clienteSeleccionado.direccion" name="direccion">
+      
+      <label for="modal-activo">Activo</label>
+      <input type="text" id="modal-activo" placeholder="Activo" [(ngModel)]="clienteSeleccionado.activo" name="activo">
       
       <div>
-        <button type="button" (click)="guardarOActualizarCliente(modalNombre, modalIdentificacion, modalTelefono, modalDireccion)">
-          {{ clienteSeleccionado.id ? 'Actualizar cliente' : 'Registrar cliente' }}
-        </button>
+        <button type="button" (click)="editarCliente()">Guardar</button>
         <button type="button" (click)="cerrarModal()">Cancelar</button>
       </div>
     </form>
   </div>
-</div> -->
-
+</div>
 
 </body>
 </html>

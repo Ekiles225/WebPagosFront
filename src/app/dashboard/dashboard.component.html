@@ -45,15 +45,15 @@
                   <tbody>
                     @for (item of listCliente; track $index) {
                       <tr>  
-                          <td>{{item.nombreCliente}}</td>
-                          <td>{{item.identificacion}}</td>
+                          <td>{{item.nombre}}</td>
+                          <td>{{item.dni}}</td>
                           <td>{{item.telefono}}</td>
                           <td>{{item.direccion}}</td>
                       </tr>
                     }
                   </tbody>
             </table>
-            <a class="btn-primary">Ver todos los clientes</a>
+            <a routerLink="clientes" class="btn-primary">Ver todos los clientes</a>
         </section>
     
         <!-- Acceso rápido a otras gestiones -->

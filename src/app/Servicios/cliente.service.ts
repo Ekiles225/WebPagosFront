@@ -8,26 +8,32 @@ export class ClienteService {
 
   constructor(private http: HttpClient) { }
 
-  storecliente(nombreCliente:any, identificacion:any, telefono:any, direccion:any){
+  storecliente(nombre:string, dni:string, telefono:string, direccion:Text, activo:boolean, usuario_id:any){
     const parametros = {
-      nombreCliente: nombreCliente,
-      identificacion: identificacion,
-      telefono: telefono,
-      direccion: direccion
+     nombre: nombre,
+     dni: dni,
+     telefono: telefono,
+     direccion: direccion,
+     activo: activo,
+     usuario_id: usuario_id
     }
 
-    return this.http.post("http://127.0.0.1:8000/api/clientes", parametros);
+    return this.http.post("http://127.0.0.1:3000/api/cliente", parametros);
   }
 
   getCliente(){
-    return  this.http.get("http://127.0.0.1:8000/api/clientes");
+    return  this.http.get("http://127.0.0.1:3000/api/cliente");
    }
 
+   getClienteById(id: number) {
+    return this.http.get(`http://127.0.0.1:3000/api/cliente/${id}`);
+  }
+
    eliminarCliente(id: number) {
-    return this.http.delete(`http://127.0.0.1:8000/api/clientes/${id}`);
+    return this.http.delete(`http://127.0.0.1:3000/api/cliente/${id}`);
   }
 
   updateCliente(id: number, clienteData: any) {
-    return this.http.put(`http://127.0.0.1:8000/api/clientes/${id}`, clienteData);  // Petición PUT para editar el cliente
+    return this.http.put(`http://127.0.0.1:3000/api/cliente/${id}`, clienteData);  // Petición PUT para editar el cliente
   }
 }

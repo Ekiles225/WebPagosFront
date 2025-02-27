@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { ClienteService } from '../Servicios/cliente.service';
 import { DasbhoarService } from '../Servicios/dasbhoar.service';
 
 @Component({
@@ -24,7 +23,7 @@ export class DashboardComponent {
   obtenerClientes() {
     this.dasbhoar.getClientess().subscribe({
       next: (data: any) => {
-        this.listCliente = data.Clientes;
+        this.listCliente = data.clientes.slice(0,3);
       },
       error: (error) => {
         console.error('Error al obtener clientes:', error);
