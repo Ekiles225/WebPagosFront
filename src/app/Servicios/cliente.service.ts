@@ -8,14 +8,13 @@ export class ClienteService {
 
   constructor(private http: HttpClient) { }
 
-  storecliente(nombre:string, dni:string, telefono:string, direccion:Text, activo:boolean, usuario_id:any){
+  storecliente(nombre:string, dni:string, telefono:string, direccion:Text, activo:boolean){
     const parametros = {
      nombre: nombre,
      dni: dni,
      telefono: telefono,
      direccion: direccion,
-     activo: activo,
-     usuario_id: usuario_id
+     activo: activo
     }
 
     return this.http.post("http://127.0.0.1:3000/api/cliente", parametros);
@@ -24,9 +23,13 @@ export class ClienteService {
   getCliente(){
     return  this.http.get("http://127.0.0.1:3000/api/cliente");
    }
-
-   getClienteById(id: number) {
-    return this.http.get(`http://127.0.0.1:3000/api/cliente/${id}`);
+   
+   filtrarCliente(dni?: string, nombre?: string) {
+    const params: any = {};
+    if (dni) params.dni = dni;
+    if (nombre) params.nombre = nombre;
+  
+    return this.http.get("http://localhost:3000/api/cliente/filtrar", { params });
   }
 
    eliminarCliente(id: number) {

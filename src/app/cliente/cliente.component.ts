@@ -13,83 +13,126 @@ import { NgIf, NgFor } from '@angular/common';
   templateUrl: './cliente.component.html',
   styleUrl: './cliente.component.css'
 })
+
 export class ClienteComponent {
-
-  constructor(private clienteS: ClienteService) {}
-
-  listCliente: any = [] = [];
-
+  listCliente: any[] = [];
+  modalAbierto: boolean = false;
+  modoEdicion: boolean = false; // Indica si el modal está en modo edición
   clienteSeleccionado: any = {
     id: null,
     nombre: '',
     dni: '',
     telefono: '',
     direccion: '',
-    activo: '',
+    activo: ''
   };
-  modalAbierto = false; // Estado del modal
+
+  filtro: string = '';
+
+  constructor(private clienteS: ClienteService) {}
 
   ngOnInit() {
-    this.obtenerClientes(); // Llamar al cargar la página para llenar la tabla
+    this.obtenerClientes(); // Llenar la lista al cargar la página
   }
 
-    // Método para obtener la lista de clientes
-    obtenerClientes() {
-      this.clienteS.getCliente().subscribe({
-        next: (data: any) => {
-          this.listCliente = data.clientes;
+  // Método para obtener la lista de clientes
+  obtenerClientes() {
+    this.clienteS.getCliente().subscribe({
+      next: (data: any) => {
+        this.listCliente = data.clientes;
+      },
+      error: (error) => {
+        console.error('Error al obtener clientes:', error);
+      }
+    });
+  }
+  
+// Método para buscar clientes
+filtrarCliente() {
+  const dni = this.filtro; // Asume que el filtro es por DNI
+  const nombre = this.filtro; // Asume que el filtro es por nombre
+
+  this.clienteS.filtrarCliente(dni, nombre).subscribe({
+    next: (data: any) => {
+      this.listCliente = data.clientes; // Actualiza la lista de clientes
+    },
+    error: (error) => {
+      console.error('Error al filtrar clientes:', error);
+    }
+  });
+}
+
+  // Método para abrir el modal (nuevo o edición)
+  abrirModal(cliente?: any) {
+    if (cliente) {
+      // Modo edición: Rellenar el formulario con los datos del cliente
+      this.clienteSeleccionado = { ...cliente };
+      this.modoEdicion = true;
+    } else {
+      // Modo registro: Limpiar el formulario
+      this.clienteSeleccionado = {
+        nombre: '',
+        dni: '',
+        telefono: '',
+        direccion: '',
+        activo: '',
+      };
+      this.modoEdicion = false;
+    }
+    this.modalAbierto = true; // Abrir el modal
+  }
+
+  // Método para guardar (registrar o editar)
+  guardarCliente() {
+    if (
+      !this.clienteSeleccionado.nombre ||
+      !this.clienteSeleccionado.dni ||
+      !this.clienteSeleccionado.telefono ||
+      !this.clienteSeleccionado.direccion ||
+      !this.clienteSeleccionado.activo 
+    ) {
+      alert("Todos los campos son requeridos.");
+      return;
+    }
+  
+    if (this.modoEdicion) {
+      // Modo edición
+      this.clienteS.updateCliente(this.clienteSeleccionado.id, this.clienteSeleccionado).subscribe({
+        next: (data) => {
+          console.log("Cliente actualizado con éxito:", data);
+          alert("Cliente actualizado con éxito");
+          this.obtenerClientes();
+          this.cerrarModal();
         },
         error: (error) => {
-          console.error('Error al obtener clientes:', error);
+          console.error("Error al actualizar cliente:", error);
+          alert("Hubo un error al actualizar el cliente.");
+        }
+      });
+    } else {
+      // Modo registro
+      this.clienteS.storecliente(
+        this.clienteSeleccionado.nombre,
+        this.clienteSeleccionado.dni,
+        this.clienteSeleccionado.telefono,
+        this.clienteSeleccionado.direccion,
+        this.clienteSeleccionado.activo
+      ).subscribe({
+        next: (data) => {
+          console.log("Cliente registrado con éxito:", data);
+          alert("Cliente registrado con éxito");
+          this.obtenerClientes();
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al registrar cliente:", error);
+          alert("Hubo un error al registrar el cliente.");
         }
       });
     }
-
-   
-
-  // Método para registrar un nuevo cliente
-  storecliente(nombre: any, dni: any, telefono: any, direccion: any, activo: any, usuario_id: any) {
-    this.clienteS.storecliente(nombre.value, dni.value, telefono.value, direccion.value, activo.value, usuario_id.value).subscribe({
-      next: (data) => {
-        console.log("Cliente registrado con éxito:", data);
-        alert("Cliente registrado con éxito");
-
-        // Limpiar los campos del formulario
-        nombre.value = "";
-        dni.value = "";
-        telefono.value = "";
-        direccion.value = "";
-        activo.value = "";
-
-        this.obtenerClientes(); // Refrescar la lista de clientes
-        // this.cerrarModal(); // Cerrar el modal después de registrar
-      },
-      error: (error) => {
-        console.error("Error al registrar cliente:", error);
-        alert("Hubo un error al registrar el cliente.");
-        this.obtenerClientes();
-      }
-    });
   }
 
-  // Método para editar un cliente existente
-  
-  editarCliente() {
-    this.clienteS.updateCliente(this.clienteSeleccionado.id, this.clienteSeleccionado).subscribe({
-      next: (data) => {
-        console.log("Cliente actualizado con éxito:", data);
-        alert("Cliente actualizado con éxito");
-        this.obtenerClientes(); // Refrescar la lista
-        this.cerrarModal(); // Cerrar el modal
-      },
-      error: (error) => {
-        console.error("Error al actualizar cliente:", error);
-        alert("Hubo un error al actualizar el cliente.");
-      }
-    });
-  }
-
-
+  // Método para cerrar el modal
   cerrarModal() {
     this.modalAbierto = false;
     this.clienteSeleccionado = {
@@ -98,23 +141,18 @@ export class ClienteComponent {
       dni: '',
       telefono: '',
       direccion: '',
-      activo: '',
+      activo: ''
     };
   }
 
-abrirModal(cliente: any) {
-  this.clienteSeleccionado = { ...cliente }; // Copia los datos del cliente seleccionado
-  this.modalAbierto = true; // Abre el modal
-}
   // Método para eliminar un cliente
- 
   eliminarCliente(id: number) {
     if (confirm('¿Estás seguro de que deseas eliminar este cliente?')) {
       this.clienteS.eliminarCliente(id).subscribe({
         next: (data) => {
           console.log("Cliente eliminado:", data);
           alert('Cliente eliminado con éxito.');
-          this.obtenerClientes();  // Volver a obtener los clientes actualizados
+          this.obtenerClientes(); // Refrescar la lista
         },
         error: (error) => {
           console.error("Error al eliminar cliente:", error);
