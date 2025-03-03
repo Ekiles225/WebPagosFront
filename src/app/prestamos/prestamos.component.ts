@@ -1,59 +1,112 @@
 import { Component } from '@angular/core';
 import { PrestamosService } from '../Servicios/prestamos.service';
+import { FormsModule } from '@angular/forms';
+import { CurrencyPipe } from '@angular/common';
 
 @Component({
   selector: 'app-prestamos',
   standalone: true,
-  imports: [],
+  imports: [FormsModule, CurrencyPipe],
   templateUrl: './prestamos.component.html',
-  styleUrl: './prestamos.component.css'
+  styleUrls: ['./prestamos.component.css']
 })
 export class PrestamosComponent {
+  listPrestamos: any[] = [];
+  lisClientes: any[] = [];
+  modalAbierto: boolean = false;
+  modoEdicion: boolean = false;
+  prestamoSeleccionado: any = {
+    id: null,
+    monto: null,
+    tasa_interes: null,
+    total_a_pagar: null,
+    fecha_inicio: '',
+    fecha_vencimiento: '',
+    estado: '',
+    descripcion: '',
+    cliente_id: null,
+  };
 
   constructor(private prestamosS: PrestamosService) {}
 
-  listPrestamos: any = [] = [];
-  lisClientes: any = [];
-
   ngOnInit() {
     this.obtenerClientes();
-    this.obtenerPrestamos();// Llamar al cargar la página para llenar la tabla
+    this.obtenerPrestamos();
   }
 
-  storePrestamos(montoTotal:any, interes:any, montoInteres:any, montoTotalConInteres:any, cuotas:any, fechaInicio:any, fechaFin:any, estado:any, clienteId:any){
-    this.prestamosS.storePrestamos(montoTotal, interes, montoInteres, montoTotalConInteres, cuotas, fechaInicio, fechaFin, estado, clienteId).subscribe({
-      next: (data) => {
-        console.log("Cliente registrado con éxito:", data);
-        alert("Cliente registrado con éxito");
 
-        // Limpiar los campos del formulario
-        montoTotal.value = "";
-        interes.value = ""; 
-        montoInteres.value = "";
-        montoTotalConInteres.value = "";
-        cuotas.value = "";
-        fechaInicio.value = "";
-        fechaFin.value = "";
-        estado.value = "";
-        clienteId.value = "";
+  abrirModal(prestamo?: any) {
+    if (prestamo) {
+      this.prestamoSeleccionado = { ...prestamo };
+      this.modoEdicion = true;
+    } else {
+      this.prestamoSeleccionado = {
+        id: null,
+        monto: null,
+        tasa_interes: null,
+        total_a_pagar: null,
+        fecha_inicio: '',
+        fecha_vencimiento: '',
+        estado: '',
+        descripcion: '',
+        cliente_id: null,
+        total_pagar: null
+      };
+      this.modoEdicion = false;
+    }
+    this.modalAbierto = true;
+  }
 
-        this.obtenerPrestamos(); // Refrescar la lista de clientes
-        // this.cerrarModal(); // Cerrar el modal después de registrar
-      },
-      error: (error) => {
-        console.error("Error al registrar cliente:", error);
-        alert("Hubo un error al registrar el cliente.");
-      }
-    });
+  guardarPrestamo() {
+
+    if (this.modoEdicion) {
+      this.prestamosS.updatePrestamos(this.prestamoSeleccionado.id, this.prestamoSeleccionado).subscribe({
+        next: (data:any) => {
+          console.log("Préstamo actualizado con éxito:", data);
+          alert("Préstamo actualizado con éxito");
+          this.obtenerPrestamos();
+          this.cerrarModal();
+        },
+        error: (error:any) => {
+          console.error("Error al actualizar préstamo:", error);
+          alert("Hubo un error al actualizar el préstamo.");
+        }
+      });
+    } else {
+      this.prestamosS.storePrestamos(
+        this.prestamoSeleccionado.monto,
+        this.prestamoSeleccionado.tasa_interes,
+        this.prestamoSeleccionado.fecha_inicio,
+        this.prestamoSeleccionado.fecha_vencimiento,
+        this.prestamoSeleccionado.estado,
+        this.prestamoSeleccionado.descripcion,
+        this.prestamoSeleccionado.cliente_id
+      ).subscribe({
+        next: (data) => {
+          console.log("Préstamo registrado con éxito:", data);
+          alert("Préstamo registrado con éxito");
+          this.obtenerPrestamos();
+          this.cerrarModal();
+        },
+        error: (error) => {
+          console.error("Error al registrar préstamo:", error);
+          alert("Hubo un error al registrar el préstamo.");
+        }
+      });
+    }
+  }
+
+  cerrarModal() {
+    this.modalAbierto = false;
   }
 
   obtenerPrestamos() {
-    this.prestamosS.getPrestamos().subscribe({
+    this.prestamosS.getPrestamosYClientes().subscribe({
       next: (data: any) => {
-        this.listPrestamos = data.Prestamos;
+        this.listPrestamos = data.prestamos;
       },
       error: (error) => {
-        console.error('Error al obtener clientes:', error);
+        console.error('Error al obtener préstamos:', error);
       }
     });
   }
@@ -61,7 +114,7 @@ export class PrestamosComponent {
   obtenerClientes() {
     this.prestamosS.getCliente().subscribe({
       next: (data: any) => {
-        this.lisClientes = data.Clientes;
+        this.lisClientes = data.clientes;
       },
       error: (error) => {
         console.error('Error al obtener clientes:', error);
@@ -69,19 +122,18 @@ export class PrestamosComponent {
     });
   }
 
-  eliminarCliente(id: number) {
-    if (confirm('¿Estás seguro de que deseas eliminar este prestamos?')) {
+  eliminarPrestamo(id: number) {
+    if (confirm('¿Estás seguro de que deseas eliminar este préstamo?')) {
       this.prestamosS.eliminarPrestamos(id).subscribe({
         next: (data) => {
-          console.log("Cliente eliminado:", data);
-          alert('Cliente eliminado con éxito.');
-          this.obtenerPrestamos();  // Volver a obtener los clientes actualizados
+          console.log("Préstamo eliminado:", data);
+          alert('Préstamo eliminado con éxito.');
+          this.obtenerPrestamos();
         },
         error: (error) => {
-          console.error("Error al eliminar cliente:", error);
+          console.error("Error al eliminar préstamo:", error);
         }
       });
     }
   }
-
 }

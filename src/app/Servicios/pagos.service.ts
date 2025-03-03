@@ -9,27 +9,27 @@ export class PagosService {
   constructor(private http: HttpClient) { }
 
 
-  // storePagos(nombreCliente:any, identificacion:any, telefono:any, direccion:any){
-  //   const parametros = {
-  //     nombreCliente: nombreCliente,
-  //     identificacion: identificacion,
-  //     telefono: telefono,
-  //     direccion: direccion
-  //   }
+  storePagos(prestamo_id:any, monto_pagado:any, fecha_pago:any, saldo_restante:any){
+    const parametros = {
+      prestamo_id: prestamo_id,
+      monto_pagado: monto_pagado,
+      fecha_pago: fecha_pago,
+      saldo_restante: saldo_restante
+    }
 
-  //   return this.http.post("http://127.0.0.1:8000/api/pagos", parametros);
-  // }
+    return this.http.post("http://localhost:3000/api/pago", parametros);
+  }
 
-  // getCliente(){
-  //   return  this.http.get("http://127.0.0.1:8000/api/clientes");
-  //  }
+  getPagos(){
+    return this.http.get('http://localhost:3000/api/pagos');
+  }
 
-  //  eliminarCliente(id: number) {
-  //   return this.http.delete(`http://127.0.0.1:8000/api/clientes/${id}`);
-  // }
+   eliminarPagos(id: number) {
+    return this.http.delete(`http://localhost:3000/api/pago/${id}`);
+  }
 
-  // updateCliente(id: number, clienteData: any) {
-  //   return this.http.put(`http://127.0.0.1:8000/api/clientes/${id}`, clienteData);  // Petición PUT para editar el cliente
-  // }
+  updatePagos(id: number, clienteData: any) {
+    return this.http.put(`http://localhost:3000/api/pago/${id}`, clienteData);  // Petición PUT para editar el cliente
+  }
 
 }

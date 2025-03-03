@@ -1,68 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pagos</title>
 </head>
 <body>
-    
-    <div class="container">
-        <h2>Registro de Pagos</h2>
-        <form>
-          <label for="cliente">Cliente</label>
-          <input type="text" id="cliente" name="cliente" placeholder="Nombre del cliente">
-      
-          <label for="prestamo">Préstamo ID</label>
-          <input type="number" id="prestamo" name="prestamo" placeholder="ID del préstamo">
-      
-          <label for="monto">Monto Pagado</label>
-          <input type="number" id="monto" name="monto" placeholder="Monto del pago">
-      
-          <label for="fecha_pago">Fecha del Pago</label>
-          <input type="date" id="fecha_pago" name="fecha_pago">
-      
-          <label for="estado">Estado</label>
-          <select id="estado" name="estado">
-            <option value="Completado">Completado</option>
-            <option value="Pendiente">Pendiente</option>
-            <option value="Rechazado">Rechazado</option>
-          </select>
-      
-          <input type="submit" value="Registrar Pago">
-        </form>
-      </div>
-      
-      <!-- <div class="container">
-        <h2>Lista de Pagos</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Cliente</th>
-              <th>Préstamo ID</th>
-              <th>Monto Pagado</th>
-              <th>Fecha de Pago</th>
-              <th>Estado</th>
-            </tr>
-          </thead>
-          <tbody>
-            @for (item of listCliente; track $index) {
-              <tr>  
-                  <td>{{item.nombreCliente}}</td>
-                  <td>{{item.identificacion}}</td>
-                  <td>{{item.telefono}}</td>
-                  <td>{{item.direccion}}</td>
-                  <td>
-                    <button   class="editar" >Editar</button>
-                    <button (click)="eliminarCliente(item.id)" class="eliminar" >Eliminar</button>
-                  </td>
-              </tr>
-            }
-          </tbody>
-        </table>
-      </div> -->
-      
 
-      //genrame
+  <div class="container">
+    <h2>Lista de Pagos</h2>
+    <button (click)="abrirModal()">Nuevo Pago</button>
+
+    <label for="cliente">Seleccione un cliente:</label>
+    <select [(ngModel)]="clienteSeleccionadoId" (change)="filtrarPagosPorCliente()">
+      <option value="">Todos los clientes</option>
+      @for (item of listcliente; track item.id) {
+        <option [value]="item.id">
+          {{ item.dni }} - {{ item.nombre }}
+        </option>
+      }
+    </select>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>Cliente</th>
+          <th>Monto Pagado</th>
+          <th>Fecha de Pago</th>
+          <th>Saldo Restante</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <!-- <tbody>
+        @for (item of listPagos; track item.id) {
+          <tr>
+            <td>{{ item.Prestamo?.Cliente?.nombre }}</td> 
+            <td>{{ item.monto_pagado | currency }}</td>
+            <td>{{ item.fecha_pago }}</td>
+            <td>{{ item.saldo_restante | currency }}</td>
+            <td>
+              <button (click)="abrirModal(item)" class="editar">Editar</button>
+              <button (click)="eliminarPago(item.id)" class="eliminar">Eliminar</button>
+            </td>
+          </tr>
+        }
+      </tbody> -->
+     
+    </table>
+  </div>
+
+  <!-- Modal para editar/registrar pago -->
+  <div class="modal" [class.show]="modalAbierto">
+    <div class="modal-content">
+
+      <form>
+
+        <label for="prestamo">Deudor: </label>
+        <select [(ngModel)]="pagoSeleccionado.prestamo_id" name="prestamo_id">
+          <option value="">Seleccione un préstamo</option>
+          @for (item of listPrestamos; track item.id) {
+            <option [value]="item.id">
+              {{ item.monto }} $ - {{ item.Cliente?.nombre }}
+            </option>
+          }
+        </select>
+        
+        <label for="monto_pagado">Monto Pagado</label>
+        <input type="number" [(ngModel)]="pagoSeleccionado.monto_pagado" name="monto_pagado" placeholder="Monto pagado" step="0.01" required>
+
+        <label for="fecha_pago">Fecha de Pago</label>
+        <input type="date" [(ngModel)]="pagoSeleccionado.fecha_pago" name="fecha_pago" required>
+
+        <div>
+          <button type="button" (click)="guardarPago()">
+            {{ modoEdicion ? 'Guardar cambios' : 'Registrar pago' }}
+          </button>
+          <button type="button" (click)="cerrarModal()">Cancelar</button>
+        </div>
+
+      </form>
+
+    </div>
+  </div>
+
 </body>
 </html>
