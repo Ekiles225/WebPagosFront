@@ -11,7 +11,7 @@
   
   label {
     display: block;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     /* font-weight: bold; */
     color: #000000;
   }
@@ -30,8 +30,17 @@ select {
     background-color: #fff;
     color: #333;
     transition: border-color 0.3s ease;
-    border-color: #007bff;
 }
+
+ 
+input[type="text"]:hover,
+input[type="number"]:hover,
+input[type="date"]:hover,
+select:hover {
+    border-color: #0056b3;
+}
+
+
 
 input[type="submit"] {
   background-color: #007bff;
@@ -73,6 +82,46 @@ input[type="submit"] {
     text-align: center;
   }
 
+  button{
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+
+  
+.editar{
+  background-color: #40a4dd;
+  max-width: 80px;
+  margin-left: 20%;
+}
+.editar:hover{
+  background-color: #2e6da4;
+}
+
+.eliminar{
+  background-color: #eb192e;
+  max-width: 80px;
+  margin-left: 20px;
+}
+
+.eliminar:hover{
+  background-color: #d14351;
+}
+
+.registrar{
+  width: 65px;
+  background-color: #3498db;
+}
+
   /* Estilos para el modal */
 .modal {
   display: none; /* Oculto por defecto */
@@ -95,7 +144,7 @@ input[type="submit"] {
   background-color: white;
   padding: 20px;
   border-radius: 5px;
-  width: 400px; /* Ancho del modal */
   max-width: 90%; /* Asegura que no sea más ancho que la pantalla */
+  max-height: 90%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra para el modal */
 }

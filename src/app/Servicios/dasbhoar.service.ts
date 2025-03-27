@@ -9,8 +9,15 @@ export class DasbhoarService {
   constructor(private http: HttpClient) { }
 
   getClientess(){
-    return  this.http.get("http://127.0.0.1:3000/api/cliente");
+    return  this.http.get("http://localhost:3000/api/cliente");
    }
 
+   getPagos(){
+    return  this.http.get("http://localhost:3000/api/pago");
+   }
+
+   getPrestamos(){
+    return  this.http.get("http://localhost:3000/api/prestamo");
+   }
 
 }

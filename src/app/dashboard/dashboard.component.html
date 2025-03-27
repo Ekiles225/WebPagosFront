@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Panel de Administración</title>
 </head>
 <body>
-     
     <div class="container">
         <!-- Sección de Dashboard -->
         <section class="dashboard">
@@ -17,55 +16,65 @@
             <div class="dashboard-summary">
                 <div class="summary-item">
                     <h3>Total Clientes</h3>
-                    <p>150</p>
+                    <p>{{ totalClientes }}</p>
                 </div>
                 <div class="summary-item">
-                    <h3>Préstamos Activos</h3>
-                    <p>45</p>
+                    <h3>Préstamos Pendientes</h3>
+                    <p>{{ prestamosPendientes }}</p>
                 </div>
                 <div class="summary-item">
-                    <h3>Pagos Pendientes</h3>
-                    <p>20</p>
+                    <h3>Pagos Realizados</h3>
+                    <p>{{ pagosRealizados }}</p>
                 </div>
             </div>
         </section>
     
         <!-- Tabla de Clientes -->
         <section class="clients-section">
-            <h2>Clientes Recientes</h2>
+            <h2>Vista previa de clientes</h2>
             <table class="clients-table">
                 <thead>
                     <tr>
-                      <th>Nombre</th>
-                      <th>Identificación</th>
-                      <th>Teléfono</th>
-                      <th>Dirección</th>
+                        <th>Nombre</th>
+                        <th>Identificación</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                     @for (item of listCliente; track $index) {
-                      <tr>  
-                          <td>{{item.nombre}}</td>
-                          <td>{{item.dni}}</td>
-                          <td>{{item.telefono}}</td>
-                          <td>{{item.direccion}}</td>
-                      </tr>
+                    <tr>
+                        <td>{{ item.nombre }}</td>
+                        <td>{{ item.dni }}</td>
+                        <td>{{ item.telefono }}</td>
+                        <td>{{ item.direccion }}</td>
+                    </tr>
                     }
-                  </tbody>
+                </tbody>
             </table>
-            <a routerLink="clientes" class="btn-primary">Ver todos los clientes</a>
         </section>
+
+        <h2>Grafico de barras</h2>
+        <!-- Graficos -->
+        <div>
+            <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
+        </div>   
+        <!-- Fin de graficos -->
+        
+    </div>
     
+    <footer>
         <!-- Acceso rápido a otras gestiones -->
         <section class="quick-access">
             <h2>Accesos Rápidos</h2>
             <div class="access-links">
-                <a routerLink="/prestamos" class="btn-secondary">Gestionar Préstamos</a>
+                <a  routerLink="/prestamos" class="btn-secondary">Gestionar Préstamos</a>
                 <a routerLink="/pagos" class="btn-secondary">Ver Pagos</a>
                 <a routerLink="/historialPagos" class="btn-secondary">Historial de Pagos</a>
             </div>
         </section>
-    </div>
-      
+    </footer>
+
+    
 </body>
 </html>

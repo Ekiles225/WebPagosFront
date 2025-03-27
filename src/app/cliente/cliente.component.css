@@ -6,7 +6,6 @@ form {
   background-color: #f9f9f9;
   padding: 20px;
   border-radius: 10px;
-  width: 350px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -19,13 +18,18 @@ label {
   margin-top: 10px;
 }
 
-input[type="text"], input[type="tel"] {
+input[type="text"], input[type="tel"], select {
   width: 100%;
   padding: 10px;
   margin: 5px 0 15px 0;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
+select:hover{
+  border-color:#2e6da4;
+}
+
 
 button{
   background-color: #28a745;
@@ -65,9 +69,6 @@ button:hover {
   width: 65px;
   background-color: #3498db;
 }
-
-
-
 
 table {
   width: 100%;
@@ -112,7 +113,7 @@ td {
   background-color: white;
   padding: 20px;
   border-radius: 4px;
-  width: 50%;
+  width: 30%;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 

@@ -9,18 +9,22 @@
 
   <div class="container">
     <h2>Lista de Pagos</h2>
-    <button (click)="abrirModal()">Nuevo Pago</button>
+    <button (click)="abrirModal()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M640-520q17 0 28.5-11.5T680-560q0-17-11.5-28.5T640-600q-17 0-28.5 11.5T600-560q0 17 11.5 28.5T640-520Zm-320-80h200v-80H320v80ZM180-120q-34-114-67-227.5T80-580q0-92 64-156t156-64h200q29-38 70.5-59t89.5-21q25 0 42.5 17.5T720-820q0 6-1.5 12t-3.5 11q-4 11-7.5 22.5T702-751l91 91h87v279l-113 37-67 224H480v-80h-80v80H180Zm60-80h80v-80h240v80h80l62-206 98-33v-141h-40L620-720q0-20 2.5-38.5T630-796q-29 8-51 27.5T547-720H300q-58 0-99 41t-41 99q0 98 27 191.5T240-200Zm240-298Z"/></svg>
+    </button>
+    <button (click)="resetearFiltro()">
+      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-480H200v480Zm80-280v-80h400v80H280Zm0 160v-80h240v80H280Z"/></svg>
+    </button>
 
     <label for="cliente">Seleccione un cliente:</label>
     <select [(ngModel)]="clienteSeleccionadoId" (change)="filtrarPagosPorCliente()">
-      <option value="">Todos los clientes</option>
+      <option [value]="null">Todos los clientes</option>
       @for (item of listcliente; track item.id) {
         <option [value]="item.id">
           {{ item.dni }} - {{ item.nombre }}
         </option>
       }
-    </select>
-    
+    </select> 
     <table>
       <thead>
         <tr>
@@ -28,11 +32,11 @@
           <th>Monto Pagado</th>
           <th>Fecha de Pago</th>
           <th>Saldo Restante</th>
-          <th>Acciones</th>
+          <th style="text-align: center;">Acciones</th>
         </tr>
       </thead>
-      <!-- <tbody>
-        @for (item of listPagos; track item.id) {
+      <tbody>
+        @for (item of listPagosFiltrados; track item.id) {
           <tr>
             <td>{{ item.Prestamo?.Cliente?.nombre }}</td> 
             <td>{{ item.monto_pagado | currency }}</td>
@@ -44,15 +48,14 @@
             </td>
           </tr>
         }
-      </tbody> -->
-     
+      </tbody>   
     </table>
   </div>
+
 
   <!-- Modal para editar/registrar pago -->
   <div class="modal" [class.show]="modalAbierto">
     <div class="modal-content">
-
       <form>
 
         <label for="prestamo">Deudor: </label>

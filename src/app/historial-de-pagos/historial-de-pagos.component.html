@@ -8,33 +8,37 @@
 <body>
     
     <div class="container">
-        <h2>Historial de Pagos</h2>
+        <h2>Historial detallado de Pagos</h2>
         <table>
           <thead>
             <tr>
-              <th>Pago ID</th>
-              <th>Estado Anterior</th>
-              <th>Estado Nuevo</th>
-              <th>Fecha del Cambio</th>
+              <th>DNI</th>
+              <th>Nombre</th>
+              <th>Monto</th>
+              <th>Interes</th>
+              <th>Total a pagar</th>
+              <th>Fecha inicio</th>
+              <th>Fecha fin</th>
+              <th>Fecha de pago</th>
+              <th>Estado</th>
             </tr>
           </thead>
           <tbody>
+           @for (item of listPagos; track $index) {
             <tr>
-              <td>1</td>
-              <td>Pendiente</td>
-              <td>Completado</td>
-              <td>2024-10-02 12:34</td>
+              <td>{{ item.Prestamo?.Cliente?.dni }}</td>
+              <td>{{ item.Prestamo?.Cliente?.nombre }}</td>
+              <td>{{ item.Prestamo?.monto }}</td>
+              <td>{{ item.Prestamo?.tasa_interes }} {{'%'}}</td>
+              <td>{{ item.Prestamo?.total_a_pagar }}</td>
+              <td>{{ item.Prestamo?.fecha_inicio }}</td>
+              <td>{{ item.Prestamo?.fecha_vencimiento }}</td>
+              <td>{{ item.fecha_pago }}</td>
+              <td>{{ item.Prestamo?.estado }}</td>
             </tr>
-            <tr>
-              <td>2</td>
-              <td>Pendiente</td>
-              <td>Rechazado</td>
-              <td>2024-09-30 10:45</td>
-            </tr>
+           }
           </tbody>
         </table>
-      </div>
-      
-      
+      </div>    
 </body>
 </html>

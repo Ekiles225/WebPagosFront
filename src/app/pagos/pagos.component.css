@@ -6,7 +6,6 @@
     background-color: #f9f9f9;
     padding: 20px;
     border-radius: 10px;
-    width: 350px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
   
@@ -23,10 +22,16 @@
     width: 100%;
     padding: 10px;
     margin: 5px 0 15px 0;
-    border: 1px solid #ccc;
+    border: 1px solid #707070;
     border-radius: 5px;
   }
   
+
+  input[type="text"]:hover, input[type="number"]:hover, input[type="date"]:hover, input[type="datetime-local"]:hover, select:hover {
+    border-color: #007bff;
+  }
+  
+
   input[type="submit"] {
     background-color: #28a745;
     color: white;
@@ -66,6 +71,45 @@
   }
   
 
+  button{
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 15px;
+  }
+  
+  button:hover {
+    background-color: #218838;
+  }
+
+  .editar{
+    background-color: #40a4dd;
+    max-width: 80px;
+    margin-left: 20%;
+  }
+  .editar:hover{
+    background-color: #2e6da4;
+  }
+  
+  .eliminar{
+    background-color: #eb192e;
+    max-width: 80px;
+    margin-left: 20px;
+  }
+  
+  .eliminar:hover{
+    background-color: #d14351;
+  }
+  
+  .registrar{
+    width: 65px;
+    background-color: #3498db;
+  }
+  
   
   /* Estilos para el modal */
 .modal {
