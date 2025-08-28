@@ -1,5 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+
+export interface Prestamo {
+  id?: string; // Optional for new loans, required for existing ones
+  cliente_id: string;
+  monto: number;
+  tasa_interes: number;
+  fecha_inicio: string; // Consider using Date objects or specific date strings
+  fecha_vencimiento: string; // Consider using Date objects or specific date strings
+  estado: string;
+  descripcion?: string; // Optional field
+  total_a_pagar?: number; // This will be calculated on the backend
+}
 
 @Injectable({
   providedIn: 'root'
@@ -7,21 +20,13 @@ import { Injectable } from '@angular/core';
 export class PrestamosService {
 
   constructor(private http: HttpClient) { }
+private apiUrl = 'http://127.0.0.1:3000/api/prestamo'; 
+  
+ 
 
-  storePrestamos(monto:any, tasa_interes:any, fecha_inicio:any, fecha_vencimiento:any, estado:any, descripcion:any, cliente_id:any){
-    const parametros = {
-      monto: monto,
-      tasa_interes: tasa_interes,
-      fecha_inicio: fecha_inicio,
-      fecha_vencimiento: fecha_vencimiento,
-      estado: estado,
-      descripcion: descripcion,
-      cliente_id: cliente_id
-    }
-    return this.http.post('http://127.0.0.1:3000/api/prestamo', parametros); 
+ storePrestamos(prestamoData: Prestamo): Observable<Prestamo> {
+    return this.http.post<Prestamo>(this.apiUrl, prestamoData);
   }
-
-
   
   getPrestamosYClientes(){
     return this.http.get('http://localhost:3000/api/prestamos');
@@ -35,8 +40,8 @@ export class PrestamosService {
     return this.http.delete(`http://127.0.0.1:3000/api/prestamo/${id}`);
   }
 
-  updatePrestamos(id: number, prestamosData: any) {
-    return this.http.put(`http://127.0.0.1:3000/api/prestamo/${id}`, prestamosData);  
+  updatePrestamo(id: string, prestamoData: Prestamo): Observable<Prestamo> {
+    return this.http.put<Prestamo>(`${this.apiUrl}/${id}`, prestamoData);
   }
 
 }

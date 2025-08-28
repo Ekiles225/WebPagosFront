@@ -1,22 +1,29 @@
-import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
-import { RouterModule } from '@angular/router';
+import { Component, HostListener  } from '@angular/core';
+import { RouterLink, RouterOutlet, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, RouterLink],
+  imports: [RouterOutlet],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'FrontEnd';
+ isMobileMenuOpen = false;
+  activePage = 'clientes'; // o la ruta por defecto
 
-  isMenuOpen = false;
+  constructor(private router: Router) {}
 
-  // Método para alternar el menú
-  toggleMenu() {
-    this.isMenuOpen = !this.isMenuOpen;
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: Event): void {
+    if (window.innerWidth > 768 && this.isMobileMenuOpen) {
+      this.isMobileMenuOpen = false;
+    }
   }
 }
 

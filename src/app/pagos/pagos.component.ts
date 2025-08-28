@@ -1,15 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { PagosService } from '../Servicios/pagos.service';
 import { FormsModule } from '@angular/forms';
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, DatePipe, NgClass, NgIf, NgFor } from '@angular/common';
 import { ClienteService } from '../Servicios/cliente.service';
 import { PrestamosService } from '../Servicios/prestamos.service';
+import { ChangeDetectorRef } from '@angular/core';
 
 
 @Component({
   selector: 'app-pagos',
   standalone: true,
-  imports: [FormsModule, CurrencyPipe],
+  imports: [FormsModule, CurrencyPipe, NgClass, DatePipe, NgIf, NgFor],
   templateUrl: './pagos.component.html',
   styleUrl: './pagos.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -36,14 +37,21 @@ export class PagosComponent {
   clienteSeleccionadoId: number | null = null; // Almacena el ID del cliente seleccionado
   listPagosFiltrados: any[] = [];
 
+// ...existing code...
+filtro: string = '';
+currentPage: number = 1;
+itemsPerPage: number = 5;
+totalPages: number = 0;
+filteredPagos: any[] = [];
+paginatedPagos: any[] = [];
+// ...existing code...
 
-
-  constructor(private pagosS: PagosService, private prestamosS: PrestamosService, private clienteS: ClienteService) { }
+  constructor(private pagosS: PagosService, private clienteS: ClienteService,  private cdr: ChangeDetectorRef, private prestamosS: PrestamosService) { }
 
   ngOnInit() {
     this.obtenerPagos(); // Llenar la lista al cargar la página
-    this.obtenerPrestamos();
     this.obtenerCliente();
+    this.obtenerPrestamos(); // Llenar la lista de préstamos al cargar la página
   }
 
 
@@ -89,7 +97,8 @@ export class PagosComponent {
           alert("Pago actualizado con éxito");
 // Suggested code may be subject to a license. Learn more: ~LicenseLog:3701389040.
           this.cerrarModal();
-          this.obtenerPagos(); // Actualiza la lista
+          this.cdr.detectChanges();
+          this.obtenerPagos();
           this.limpiarFormulario();
         },
         error: (error) => {
@@ -107,9 +116,8 @@ export class PagosComponent {
         next: (data) => {
           console.log("Pago registrado con éxito:", data);
           alert("Pago registrado con éxito");
-// Suggested code may be subject to a license. Learn more: ~LicenseLog:2032285740.
-          this.cerrarModal();
-          this.obtenerPagos(); // Actualiza la lista
+          this.cdr.detectChanges();
+          this.obtenerPagos();
           this.limpiarFormulario();
         },
         error: (error) => {
@@ -136,8 +144,10 @@ export class PagosComponent {
     this.pagosS.getPagos().subscribe({
       next: (data: any) => {
         this.listPagos = data;
+         this.applyPagosFilters();
         this.listPagosFiltrados = [...this.listPagos]; // Asegura que se carguen los datos correctamente
         console.log('Lista de pagos cargada:', this.listPagosFiltrados);
+        this.cdr.detectChanges(); 
       },
       error: (error) => {
         console.error('Error al obtener pagos:', error);
@@ -145,50 +155,25 @@ export class PagosComponent {
     });
   }
 
-
-
-  filtrarPagosPorCliente() {
-    console.log("Cliente seleccionado:", this.clienteSeleccionadoId);
-    console.log("Lista de pagos antes del filtrado:", this.listPagos);
-
-    if (!this.clienteSeleccionadoId) {
-      this.listPagosFiltrados = [...this.listPagos]; // Si no hay cliente seleccionado, mostrar todos los pagos
-      return;
-    }
-
-    this.listPagosFiltrados = this.listPagos.filter(pago => {
-      return pago.Prestamo?.cliente_id == this.clienteSeleccionadoId;
-    });
-
-    console.log("Lista de pagos filtrados:", this.listPagosFiltrados);
-  }
-
-  resetearFiltro() {
-    this.clienteSeleccionadoId = null; // Restablecer selección
-    this.listPagosFiltrados = [...this.listPagos]; // Mostrar todos los pagos
-  }
-
-
-
   obtenerPrestamos() {
     this.prestamosS.getPrestamosYClientes().subscribe({
       next: (data: any) => {
         console.log("Datos de préstamos recibidos:", data); // Depuración
         this.listPrestamos = data.prestamos; // Ya incluye cliente
+        this.cdr.detectChanges(); 
+
       },
       error: (error) => {
         console.error('Error al obtener préstamos:', error);
       }
     });
   }
-
-
-
   obtenerCliente() {
     this.clienteS.getCliente().subscribe({
       next: (data: any) => {
         console.log("Datos de cliente recibidos:", data); // Depuración
         this.listcliente = data.clientes; // Ya incluye cliente
+        this.cdr.detectChanges();
       },
       error: (error) => {
         console.error('Error al obtener préstamos:', error);
@@ -212,5 +197,69 @@ export class PagosComponent {
     }
   }
 
+  // Método para la paginacion 
+
+  applyPagosFilters() {
+  if (this.filtro.trim() === '') {
+    this.filteredPagos = [...this.listPagos];
+  } else {
+    const searchTerm = this.filtro.toLowerCase();
+    this.filteredPagos = this.listPagos.filter(pago =>
+      (pago.cliente?.nombre?.toLowerCase().includes(searchTerm) || '') ||
+      (pago.descripcion?.toLowerCase().includes(searchTerm) || '')
+    );
+  }
+  this.currentPage = 1;
+  this.updatePagosPagination();
+}
+
+updatePagosPagination() {
+  this.totalPages = Math.ceil(this.filteredPagos.length / this.itemsPerPage);
+  this.updatePaginatedPagos();
+}
+
+updatePaginatedPagos() {
+  const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+  const endIndex = startIndex + this.itemsPerPage;
+  this.paginatedPagos = this.filteredPagos.slice(startIndex, endIndex);
+}
+
+changePagosPage(page: number) {
+  if (page < 1 || page > this.totalPages) return;
+  this.currentPage = page;
+  this.updatePaginatedPagos();
+}
+
+previousPagosPage() {
+  if (this.currentPage > 1) {
+    this.changePagosPage(this.currentPage - 1);
+  }
+}
+
+nextPagosPage() {
+  if (this.currentPage < this.totalPages) {
+    this.changePagosPage(this.currentPage + 1);
+  }
+}
+
+getPagosPageRange(): number[] {
+  const range: number[] = [];
+  const maxPages = 5;
+  let start = Math.max(1, this.currentPage - Math.floor(maxPages / 2));
+  let end = Math.min(this.totalPages, start + maxPages - 1);
+  if (end - start + 1 < maxPages) {
+    start = Math.max(1, end - maxPages + 1);
+  }
+  for (let i = start; i <= end; i++) {
+    range.push(i);
+  }
+  return range;
+}
+
+getPagosPaginationInfo(): string {
+  const startItem = (this.currentPage - 1) * this.itemsPerPage + 1;
+  const endItem = Math.min(this.currentPage * this.itemsPerPage, this.filteredPagos.length);
+  return `Mostrando ${startItem}-${endItem} de ${this.filteredPagos.length} pagos`;
+}
 
 }

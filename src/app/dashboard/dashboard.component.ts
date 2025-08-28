@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { DasbhoarService } from '../Servicios/dasbhoar.service';
 import { RouterLink } from '@angular/router';
-
 import { CanvasJSAngularChartsModule } from '@canvasjs/angular-charts';
+import { DecimalPipe } from '@angular/common';
 // import { BrowserModule } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, CanvasJSAngularChartsModule],
+  imports: [DecimalPipe, RouterLink, CanvasJSAngularChartsModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.css']
 })
@@ -131,4 +131,25 @@ export class DashboardComponent  {
       }
     });
   }
+
+  // ...existing code...
+
+
+// Si quieres que "Ingresos" sea la suma de todos los pagos realizados:
+get totalIngresos(): number {
+  return this.listPagos?.reduce((acc, pago) => acc + Number(pago.monto_pagado || 0), 0) || 0;
+}
+
+// Si quieres que "Crecimiento" y "Recuperación" sean calculados, agrega lógica según tu necesidad
+get crecimiento(): string {
+  // Ejemplo: crecimiento ficticio
+  return '+15.3%';
+}
+
+get recuperacion(): string {
+  // Ejemplo: recuperación ficticia
+  return '94.2%';
+}
+
+// ...existing code...
 }

@@ -1,80 +1,145 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel de Administración</title>
 </head>
+
 <body>
     <div class="container">
         <!-- Sección de Dashboard -->
         <section class="dashboard">
-            <h1>Bienvenido, Admin</h1>
+            <h1>
+                <i data-lucide="layout-dashboard" class="icon-lg"></i>
+                Panel de Administración
+            </h1>
             <p>Gestiona tus clientes, préstamos y pagos desde este panel de control.</p>
-    
+
             <!-- Tarjetas resumen -->
             <div class="dashboard-summary">
                 <div class="summary-item">
-                    <h3>Total Clientes</h3>
+                    <h3>
+                        <i data-lucide="users" class="icon"></i>
+                        Total Clientes
+                    </h3>
                     <p>{{ totalClientes }}</p>
                 </div>
                 <div class="summary-item">
-                    <h3>Préstamos Pendientes</h3>
+                    <h3>
+                        <i data-lucide="clock" class="icon"></i>
+                        Préstamos Pendientes
+                    </h3>
                     <p>{{ prestamosPendientes }}</p>
                 </div>
                 <div class="summary-item">
-                    <h3>Pagos Realizados</h3>
+                    <h3>
+                        <i data-lucide="check-circle" class="icon"></i>
+                        Pagos Realizados
+                    </h3>
                     <p>{{ pagosRealizados }}</p>
                 </div>
             </div>
         </section>
-    
+
         <!-- Tabla de Clientes -->
         <section class="clients-section">
-            <h2>Vista previa de clientes</h2>
-            <table class="clients-table">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Identificación</th>
-                        <th>Teléfono</th>
-                        <th>Dirección</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (item of listCliente; track $index) {
-                    <tr>
-                        <td>{{ item.nombre }}</td>
-                        <td>{{ item.dni }}</td>
-                        <td>{{ item.telefono }}</td>
-                        <td>{{ item.direccion }}</td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+            <h2>
+                <i data-lucide="eye" class="icon-lg"></i>
+                Vista previa de clientes
+            </h2>
+            <div style="overflow-x: auto;">
+                <table class="clients-table">
+                    <thead>
+                        <tr>
+                            <td>
+                                <i data-lucide="user" class="icon"></i>
+                                Nombre
+                            </td>
+                            <td>
+                                <i data-lucide="credit-card" class="icon"></i>
+                                Identificación
+                            </td>
+                            <td>
+                                <i data-lucide="phone" class="icon"></i>
+                                Teléfono
+                            </td>
+                            <td>
+                                <i data-lucide="map-pin" class="icon"></i>
+                                Dirección
+                            </td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (item of listCliente; track $index) {
+                        <tr>
+                            <td>{{ item.nombre }}</td>
+                            <td>{{ item.dni }}</td>
+                            <td>{{ item.telefono }}</td>
+                            <td>{{ item.direccion }}</td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
         </section>
 
-        <h2>Grafico de barras</h2>
-        <!-- Graficos -->
-        <div>
-            <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'360px'}"></canvasjs-chart>    
-        </div>   
-        <!-- Fin de graficos -->
-        
+        <!-- Sección de Gráficos -->
+
+        <canvasjs-chart [options]="chartOptions" [styles]="{width: '100%', height:'450px'}"></canvasjs-chart>
+
+
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3>
+                    <i data-lucide="trending-up" class="icon"></i>
+                    Crecimiento
+                </h3>
+                <p>{{ crecimiento }}</p>
+            </div>
+            <div class="stat-box">
+                <h3>
+                    <i data-lucide="dollar-sign" class="icon"></i>
+                    Ingresos
+                </h3>
+                <p>${{ totalIngresos | number:'1.0-2' }}</p>
+            </div>
+            <div class="stat-box">
+                <h3>
+                    <i data-lucide="target" class="icon"></i>
+                    Recuperación
+                </h3>
+                <p>{{ recuperacion }}</p>
+            </div>
+        </div>
+
     </div>
-    
+
     <footer>
         <!-- Acceso rápido a otras gestiones -->
         <section class="quick-access">
-            <h2>Accesos Rápidos</h2>
+            <h2>
+                <i data-lucide="zap" class="icon-lg"></i>
+                Accesos Rápidos
+            </h2>
             <div class="access-links">
-                <a  routerLink="/prestamos" class="btn-secondary">Gestionar Préstamos</a>
-                <a routerLink="/pagos" class="btn-secondary">Ver Pagos</a>
-                <a routerLink="/historialPagos" class="btn-secondary">Historial de Pagos</a>
+                <a routerLink="/prestamos" class="btn-secondary">
+                    <i data-lucide="file-text" class="icon"></i>
+                    Gestionar Préstamos
+                </a>
+                <a routerLink="/pagos" class="btn-secondary">
+                    <i data-lucide="credit-card" class="icon"></i>
+                    Ver Pagos
+                </a>
+                <a routerLink="/historialPagos" class="btn-secondary">
+                    <i data-lucide="history" class="icon"></i>
+                    Historial de Pagos
+                </a>
             </div>
         </section>
     </footer>
 
-    
 </body>
+
 </html>

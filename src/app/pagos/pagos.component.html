@@ -1,90 +1,267 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pagos</title>
 </head>
+
 <body>
 
   <div class="container">
-    <h2>Lista de Pagos</h2>
-    <button (click)="abrirModal()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M640-520q17 0 28.5-11.5T680-560q0-17-11.5-28.5T640-600q-17 0-28.5 11.5T600-560q0 17 11.5 28.5T640-520Zm-320-80h200v-80H320v80ZM180-120q-34-114-67-227.5T80-580q0-92 64-156t156-64h200q29-38 70.5-59t89.5-21q25 0 42.5 17.5T720-820q0 6-1.5 12t-3.5 11q-4 11-7.5 22.5T702-751l91 91h87v279l-113 37-67 224H480v-80h-80v80H180Zm60-80h80v-80h240v80h80l62-206 98-33v-141h-40L620-720q0-20 2.5-38.5T630-796q-29 8-51 27.5T547-720H300q-58 0-99 41t-41 99q0 98 27 191.5T240-200Zm240-298Z"/></svg>
-    </button>
-    <button (click)="resetearFiltro()">
-      <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#F3F3F3"><path d="M200-120q-33 0-56.5-23.5T120-200v-560q0-33 23.5-56.5T200-840h560q33 0 56.5 23.5T840-760v560q0 33-23.5 56.5T760-120H200Zm0-80h560v-480H200v480Zm80-280v-80h400v80H280Zm0 160v-80h240v80H280Z"/></svg>
-    </button>
+    <!-- Header -->
+    <div class="header">
+      <h1>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+        </svg>
+        Gestión de Pagos
+      </h1>
+      <p>Administra y controla todos los pagos de préstamos de manera eficiente</p>
 
-    <label for="cliente">Seleccione un cliente:</label>
-    <select [(ngModel)]="clienteSeleccionadoId" (change)="filtrarPagosPorCliente()">
-      <option [value]="null">Todos los clientes</option>
-      @for (item of listcliente; track item.id) {
-        <option [value]="item.id">
-          {{ item.dni }} - {{ item.nombre }}
-        </option>
-      }
-    </select> 
-    <table>
-      <thead>
-        <tr>
-          <th>Cliente</th>
-          <th>Monto Pagado</th>
-          <th>Fecha de Pago</th>
-          <th>Saldo Restante</th>
-          <th style="text-align: center;">Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for (item of listPagosFiltrados; track item.id) {
+      <div class="actions-bar">
+        <div class="btn-group">
+          <button class="btn btn-primary" (click)="abrirModal()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Nuevo Pago
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filter Section -->
+    <div class="filter-section">
+      <div class="filter-group">
+        <label for="cliente">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            style="display: inline; margin-right: 5px;">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+            <circle cx="12" cy="7" r="4" />
+          </svg>
+          Filtrar por Cliente:
+        </label>
+        <select id="cliente" [(ngModel)]="clienteSeleccionadoId" class="select-filter">
+          <option [value]="null">Todos los clientes</option>
+          @for (cliente of listcliente; track cliente.id) {
+          <option [value]="cliente.id">
+            {{ cliente.dni }} - {{ cliente.nombre }}
+          </option>
+          }
+        </select>
+      </div>
+    </div>
+
+    <!-- Table Container -->
+    @if (listPagosFiltrados.length > 0) {
+    <div class="table-container">
+      <table class="table">
+        <thead>
           <tr>
-            <td>{{ item.Prestamo?.Cliente?.nombre }}</td> 
-            <td>{{ item.monto_pagado | currency }}</td>
-            <td>{{ item.fecha_pago }}</td>
-            <td>{{ item.saldo_restante | currency }}</td>
-            <td>
-              <button (click)="abrirModal(item)" class="editar">Editar</button>
-              <button (click)="eliminarPago(item.id)" class="eliminar">Eliminar</button>
+            <th>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="display: inline; margin-right: 5px;">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+              </svg>
+              Cliente
+            </th>
+            <th>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="display: inline; margin-right: 5px;">
+                <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+              </svg>
+              Monto Pagado
+            </th>
+            <th>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="display: inline; margin-right: 5px;">
+                <path
+                  d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+              </svg>
+              Fecha de Pago
+            </th>
+            <th>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="display: inline; margin-right: 5px;">
+                <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" />
+                <path d="M15 2H9a1 1 0 0 0-1 1v2a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+              </svg>
+              Saldo Restante
+            </th>
+            <th style="text-align: center;">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                style="display: inline; margin-right: 5px;">
+                <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+              </svg>
+              Acciones
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (pago of paginatedPagos; track pago.id) {
+          <tr class="table-row">
+            <td class="client-name">
+              <div class="client-info">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                  <circle cx="12" cy="7" r="4" />
+                </svg>
+                {{ pago.Prestamo?.Cliente?.nombre || 'N/A' }}
+              </div>
+            </td>
+            <td class="currency">
+              <span class="amount positive">
+                {{ pago.monto_pagado | currency:'USD':'symbol':'1.2-2' }}
+              </span>
+            </td>
+            <td class="date">
+              <span class="date-badge">
+                {{ pago.fecha_pago | date:'dd/MM/yyyy' }}
+              </span>
+            </td>
+            <td class="currency">
+              <span class="amount" [ngClass]="{'negative': pago.saldo_restante > 0, 'zero': pago.saldo_restante === 0}">
+                {{ pago.saldo_restante | currency:'USD':'symbol':'1.2-2' }}
+              </span>
+            </td>
+            <td class="actions">
+              <button class="btn btn-success btn-sm" (click)="abrirModal(pago)" title="Editar pago">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+                </svg>
+                Editar
+              </button>
+              <button class="btn btn-danger btn-sm" (click)="eliminarPago(pago.id)" title="Eliminar pago">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                </svg>
+                Eliminar
+              </button>
             </td>
           </tr>
-        }
-      </tbody>   
-    </table>
+          }
+        </tbody>
+      </table>
+    </div>
+
+         <div class="pagination" *ngIf="totalPages > 1">
+                <button (click)="previousPagosPage()" [disabled]="currentPage === 1">&laquo;</button>
+                <button *ngFor="let page of getPagosPageRange()" (click)="changePagosPage(page)"
+                    [class.active]="currentPage === page">{{
+                    page }}</button>
+                <button (click)="nextPagosPage()" [disabled]="currentPage === totalPages">&raquo;</button>
+            </div>
+            <p>{{ getPagosPaginationInfo() }}</p>
+
+    } @else {
+    <div class="empty-state">
+      <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+      </svg>
+      <h3>No hay pagos registrados</h3>
+      <p>Comienza registrando tu primer pago</p>
+    </div>
+    }
   </div>
 
 
-  <!-- Modal para editar/registrar pago -->
-  <div class="modal" [class.show]="modalAbierto">
+
+
+  <!-- Modal -->
+  <div class="modal" id="modal" *ngIf="modalAbierto" [ngClass]="{'open': modalAbierto}">
     <div class="modal-content">
-      <form>
-
-        <label for="prestamo">Deudor: </label>
-        <select [(ngModel)]="pagoSeleccionado.prestamo_id" name="prestamo_id">
-          <option value="">Seleccione un préstamo</option>
-          @for (item of listPrestamos; track item.id) {
-            <option [value]="item.id">
-              {{ item.monto }} $ - {{ item.Cliente?.nombre }}
-            </option>
+      <div class="modal-header">
+        <h2>
+          @if (modoEdicion) {
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z" />
+          </svg>
+          Editar Pago
+          } @else {
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 5v14M5 12h14" />
+          </svg>
+          Registrar Nuevo Pago
           }
-        </select>
-        
-        <label for="monto_pagado">Monto Pagado</label>
-        <input type="number" [(ngModel)]="pagoSeleccionado.monto_pagado" name="monto_pagado" placeholder="Monto pagado" step="0.01" required>
+        </h2>
+        <p>Complete los datos del pago</p>
+      </div>
 
-        <label for="fecha_pago">Fecha de Pago</label>
-        <input type="date" [(ngModel)]="pagoSeleccionado.fecha_pago" name="fecha_pago" required>
-
-        <div>
-          <button type="button" (click)="guardarPago()">
-            {{ modoEdicion ? 'Guardar cambios' : 'Registrar pago' }}
-          </button>
-          <button type="button" (click)="cerrarModal()">Cancelar</button>
+      <form #pagoForm="ngForm">
+        <div class="form-group">
+          <label for="prestamo">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="display: inline; margin-right: 5px;">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+              <circle cx="12" cy="7" r="4" />
+            </svg>
+            Deudor: <span class="required">*</span>
+          </label>
+          <select id="prestamo" [(ngModel)]="pagoSeleccionado.prestamo_id" name="prestamo_id" required>
+            <option value="">Seleccione un préstamo</option>
+            @for (prestamo of listPrestamos; track prestamo.id) {
+            <option [value]="prestamo.id">
+              {{ prestamo.monto | currency:'USD':'symbol':'1.2-2' }} - {{ prestamo.Cliente?.nombre }}
+            </option>
+            }
+          </select>
         </div>
 
-      </form>
+        <div class="form-group">
+          <label for="monto_pagado">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="display: inline; margin-right: 5px;">
+              <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+            </svg>
+            Monto Pagado: <span class="required">*</span>
+          </label>
+          <input type="number" id="monto_pagado" [(ngModel)]="pagoSeleccionado.monto_pagado" name="monto_pagado"
+            placeholder="0.00" step="0.01" min="0" required>
+        </div>
 
+
+        <div class="form-group">
+          <label for="fecha_pago">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              style="display: inline; margin-right: 5px;">
+              <path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z" />
+            </svg>
+            Fecha de Pago: <span class="required">*</span>
+          </label>
+          <input type="date" id="fecha_pago" [(ngModel)]="pagoSeleccionado.fecha_pago" name="fecha_pago" required>
+        </div>
+
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary" [disabled]="!pagoForm.valid" (click)="guardarPago()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20 6L9 17l-5-5" />
+            </svg>
+            @if (modoEdicion) {
+            Guardar Cambios
+            } @else {
+            Registrar Pago
+            }
+          </button>
+          <button type="button" class="btn btn-secondary" (click)="cerrarModal()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M18 6L6 18M6 6l12 12" />
+            </svg>
+            Cancelar
+          </button>
+        </div>
+      </form>
     </div>
   </div>
 
+  <!-- Overlay del modal -->
+  @if (modalAbierto) {
+  <div class="modal-overlay" (click)="cerrarModal()"></div>
+  }
+
 </body>
+
 </html>
